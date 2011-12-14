@@ -1,0 +1,4 @@
+name: MilkBukkit
+
+main: rusketh.Milk.MilkBukkit
+version: 1
