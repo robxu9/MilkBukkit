@@ -1,0 +1,4 @@
+join: "%green%[+] %yellow%%playername% %blue%has joined the server!"
+leave: "%red%[+] %yellow%%playername% %blue%has left the server!"
+welcome: "%blue%Welcome to '%green%%servername%%blue%' please have fun."
+motd: "%green%MOTD:\n%blue%Do not be a douch bag!"
