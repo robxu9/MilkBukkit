@@ -9,7 +9,6 @@ import java.util.Hashtable;
 import org.bukkit.event.Event;
 import org.bukkit.event.Event.Priority;
 
-
 import rusketh.Milk.MilkBukkit;
 import rusketh.Milk.Event.Listeners.MilkBlockListener;
 import rusketh.Milk.Event.Listeners.MilkEntityListener;
@@ -111,6 +110,15 @@ public class MilkEventManager {
 				}
 				
 				MilkEvent event = method.getAnnotation(MilkEvent.class);
+				
+				/*
+				Class<?>[] args = method.getParameterTypes();
+				if ( args.length != 1 || args[0].isInstance(Event.class) ) {
+					Message( "Milk Error: A event method can only have 1 event parameter.");
+					Message( "When: Registering event method '" + method.getName() + "' with plugin '" + plugin.GetName() + "'.");
+					continue; //Fighting idiots!
+				} */ //TODO implement this!
+				
 				RegisterEvent(plugin, event.event(), method);
 			} 
 		} catch (Throwable e) {

@@ -4,13 +4,16 @@ package rusketh.Milk.Plugin;
 //import java.util.HashMap;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+
 import org.bukkit.Server;
-import org.bukkit.util.config.Configuration;
+import org.bukkit.configuration.InvalidConfigurationException;
+import org.bukkit.configuration.file.YamlConfiguration;
 
 import rusketh.Milk.MilkBukkit;
 
 
-@SuppressWarnings("deprecation")
 public abstract class MilkPlugin {
 	
 	private MilkBukkit milkBukkit;
@@ -18,7 +21,8 @@ public abstract class MilkPlugin {
 	private boolean isEnabled = false;
 	private boolean initialized = false;
 	
-	private Configuration configuration;
+	private YamlConfiguration configuration;
+	private File configurationFile;
 	
 	//private HashMap<String, Object> classes;
 	
@@ -52,6 +56,10 @@ public abstract class MilkPlugin {
 		}
 	}
 	
+	protected void Message(String message) {
+		milkBukkit.Message(message);
+	}
+	
 	protected MilkBukkit GetMilk() {
 		return milkBukkit;
 	}
@@ -69,22 +77,40 @@ public abstract class MilkPlugin {
 	}
 	
 	protected final void CreateConig(File configFile) {
-		configuration = new Configuration(configFile);
+		configuration = new YamlConfiguration();
+		configurationFile = configFile;
+		LoadConfig();
 	}
 	
-	public final Configuration GetConfig() {
+	public final YamlConfiguration GetConfig() {
 		return configuration;
 	}
 	
 	public final void LoadConfig() {
-		if ( configuration != null ) {
-			configuration.load();
+		if ( configurationFile != null ) {
+			try {
+				configuration.load(configurationFile);
+			} catch (FileNotFoundException e) {
+				Message("Milk: Error '" + e + "'.");
+				Message("When: Loading '" + configurationFile.getPath() + "' for plugin '" + this.GetName() + "'.");
+			} catch (IOException e) {
+				Message("Milk: Error '" + e + "'.");
+				Message("When: Loading '" + configurationFile.getPath() + "' for plugin '" + this.GetName() + "'.");
+			} catch (InvalidConfigurationException e) {
+				Message("Milk: Error '" + e + "'.");
+				Message("When: Loading '" + configurationFile.getPath() + "' for plugin '" + this.GetName() + "'.");
+			}
 		}
 	}
 	
 	public final void SaveConfig() {
 		if ( configuration != null ) {
-			configuration.save();
+			try {
+				configuration.save(configurationFile);
+			} catch (IOException e) {
+				Message("Milk: Error '" + e + "'.");
+				Message("When: Saveing '" + configurationFile.getPath() + "' for plugin '" + this.GetName() + "'.");
+			}
 		}
 	}
 	

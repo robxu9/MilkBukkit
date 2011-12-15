@@ -160,9 +160,8 @@ public class MilkPlayerListener extends PlayerListener {
 	public void onPlayerChat(PlayerChatEvent event) {
 		if ( event.getMessage().startsWith("!") ) {
 			
-			String[] args = event.getMessage().toLowerCase().split(" ");
-			String usedCommand = args[0].substring(1);
-			args = event.getMessage().substring(usedCommand.length() + 1).split(" ");
+			String usedCommand = event.getMessage().toLowerCase().split(" ")[0].substring(1);
+			String[] args = event.getMessage().substring(usedCommand.length() + 1).split(" ");
 					
 			if ( milkBukkit.RunCommand( (CommandSender)event.getPlayer(), usedCommand, args) ) {
 				event.setCancelled(true);
