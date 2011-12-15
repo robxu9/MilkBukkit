@@ -5,11 +5,8 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLClassLoader;
+import java.lang.reflect.Method;
 import java.util.Enumeration;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
@@ -26,6 +23,7 @@ public class MilkPluginLoader {
 	private File configFolder;
 	
 	private ClassLoader classLoader;
+	private Method loaderMethod;
 	
 	public MilkPluginLoader(MilkBukkit Milk, MilkPluginManager manager) {
 		milkBukkit = Milk;
@@ -34,7 +32,17 @@ public class MilkPluginLoader {
 		pluginFolder = new File("Milk");
 		configFolder = new File("Milk/Config");
 		
-		classLoader = MilkPlugin.class.getClassLoader();
+		MakeClassLoader();
+	}
+	
+	private void MakeClassLoader() {
+		try {
+			classLoader = MilkPlugin.class.getClassLoader();
+			loaderMethod = (java.net.URLClassLoader.class).getDeclaredMethod("addURL", new Class[] {java.net.URL.class});
+			loaderMethod.setAccessible(true);
+		} catch (NoSuchMethodException e) {
+			
+		}
 	}
 	
 	private void Message(String message) {
@@ -49,6 +57,16 @@ public class MilkPluginLoader {
 		
 		if ( !configFolder.exists() ) {
 			configFolder.mkdir();
+		}
+		
+		if ( classLoader == null ) {
+			Message("Milk: Error with 'classLoader', plugin loading aborted.");
+			Message("When: Loading plugins.");
+		}
+		
+		if ( loaderMethod == null ) {
+			Message("Milk: Error with 'loaderMethod', plugin loading aborted.");
+			Message("When: Loading plugins.");
 		}
 		
 		for (File pluginFile : pluginFolder.listFiles() ) {
@@ -75,6 +93,8 @@ public class MilkPluginLoader {
 	
 	private void LoadFile(File pluginFile, File configFolder) {
 		try {
+			loaderMethod.invoke(classLoader, new Object[] {pluginFile.toURI().toURL()});
+			
 			JarFile jarFile = new JarFile(pluginFile);
 			
 			Enumeration<JarEntry> entries = jarFile.entries();
@@ -96,33 +116,39 @@ public class MilkPluginLoader {
 		} catch (IOException e) {
 			Message("Milk: Error '" + e + "'");
 			Message("When: loading plugin file '" + pluginFile.getName() + "'.");
+		} catch (IllegalAccessException e) {
+			Message("Milk: Error '" + e + "'");
+			Message("When: loading plugin file '" + pluginFile.getName() + "'.");
+		} catch (IllegalArgumentException e) {
+			Message("Milk: Error '" + e + "'");
+			Message("When: loading plugin file '" + pluginFile.getName() + "'.");
+		} catch (InvocationTargetException e) {
+			Message("Milk: Error '" + e + "'");
+			Message("When: loading plugin file '" + pluginFile.getName() + "'.");
 		}
 	}
 	
 	public void LoadClass(JarEntry entry, JarFile jarFile, File pluginFile, File configFile) {
-		try { //Based on Bukkits plugin loader!
-			URL[] urls = new URL[1];
-			urls[0] = pluginFile.toURI().toURL();
-			URLClassLoader urlLoader = new URLClassLoader(urls, classLoader);
-			Message("Milk: Debug '" + urls[0] + "'");
-			Class<?> jarClass = Class.forName(entry.getName(), true, urlLoader);
-			Class<? extends MilkPlugin> pluginClass = jarClass.asSubclass(MilkPlugin.class);
+		try { //Based on ModLoaderMP
 			
-			Constructor<? extends MilkPlugin> constructor = pluginClass.getConstructor();
-			MilkPlugin plugin = constructor.newInstance();
+			String className = entry.getName().split("\\.")[0];
+			
+			if(className.contains("$"))
+            {
+                return;
+            }
+			
+			Class<?> theClass = classLoader.loadClass(className);
+			Class<? extends MilkPlugin> pluginClass = theClass.asSubclass(MilkPlugin.class);
+			MilkPlugin plugin = pluginClass.newInstance();
 			
 			pluginManager.RegisterPlugin(plugin);
 			plugin.CreateConig(configFile);
 			
-		} catch (MalformedURLException e) {
-			Message("Milk: Error '" + e + "'.");
-			Message("When: trying to load '" + entry.getName() + "' in '" + pluginFile.getName() + "'");
 		} catch (ClassNotFoundException e) {
 			Message("Milk: Error '" + e + "'.");
 			Message("When: trying to load '" + entry.getName() + "' in '" + pluginFile.getName() + "'");
-		} catch (NoSuchMethodException e) {
-			Message("Milk: Error '" + e + "'.");
-			Message("When: trying to load '" + entry.getName() + "' in '" + pluginFile.getName() + "'");
+			e.printStackTrace();
 		} catch (SecurityException e) {
 			Message("Milk: Error '" + e + "'.");
 			Message("When: trying to load '" + entry.getName() + "' in '" + pluginFile.getName() + "'");
@@ -133,9 +159,6 @@ public class MilkPluginLoader {
 			Message("Milk: Error '" + e + "'.");
 			Message("When: trying to load '" + entry.getName() + "' in '" + pluginFile.getName() + "'");
 		} catch (IllegalArgumentException e) {
-			Message("Milk: Error '" + e + "'.");
-			Message("When: trying to load '" + entry.getName() + "' in '" + pluginFile.getName() + "'");
-		} catch (InvocationTargetException e) {
 			Message("Milk: Error '" + e + "'.");
 			Message("When: trying to load '" + entry.getName() + "' in '" + pluginFile.getName() + "'");
 		}

@@ -122,7 +122,7 @@ public class MilkEventManager {
 	public void Call(String eventName, Object event) {
 		Hashtable<Method, String> events = eventMap.get(eventName.toLowerCase());
 		
-		if ( eventMap == null || eventMap.isEmpty() ) {
+		if ( events == null || events.isEmpty() ) {
 			return;
 		}
 		
