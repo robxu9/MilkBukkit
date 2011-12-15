@@ -31,8 +31,8 @@ public class MilkPluginLoader {
 		milkBukkit = Milk;
 		pluginManager = manager;
 		
-		pluginFolder = new File("/Milk");
-		configFolder = new File("/Milk/Config");
+		pluginFolder = new File("Milk");
+		configFolder = new File("Milk/Config");
 		
 		classLoader = MilkPlugin.class.getClassLoader();
 	}
@@ -62,7 +62,7 @@ public class MilkPluginLoader {
 			if ( fileName.endsWith(".jar") ) {
 				
 				fileName = fileName.substring(0, fileName.length() - 4);
-				File configFolder = new File("/Milk/Config/" + fileName);
+				File configFolder = new File("Milk/Config/" + fileName);
 				
 				if ( !configFolder.exists() ) {
 					configFolder.mkdir();
@@ -84,7 +84,7 @@ public class MilkPluginLoader {
 				JarEntry entry = entries.nextElement();
 				String entryName = entry.getName();
 				
-				if ( entryName.startsWith("milk_") && entryName.endsWith(".class") ) {
+				if ( entryName.startsWith("Milk_") && entryName.endsWith(".class") ) {
 					
 					File configFile = FindConfig(entry, jarFile, pluginFile, configFolder);
 					if ( configFile != null ) {
@@ -100,11 +100,11 @@ public class MilkPluginLoader {
 	}
 	
 	public void LoadClass(JarEntry entry, JarFile jarFile, File pluginFile, File configFile) {
-		try {
+		try { //Based on Bukkits plugin loader!
 			URL[] urls = new URL[1];
 			urls[0] = pluginFile.toURI().toURL();
 			URLClassLoader urlLoader = new URLClassLoader(urls, classLoader);
-			
+			Message("Milk: Debug '" + urls[0] + "'");
 			Class<?> jarClass = Class.forName(entry.getName(), true, urlLoader);
 			Class<? extends MilkPlugin> pluginClass = jarClass.asSubclass(MilkPlugin.class);
 			
