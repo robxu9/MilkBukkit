@@ -7,7 +7,7 @@ import rusketh.Milk.Command.MilkCommand;
 import rusketh.Milk.Event.MilkEvent;
 import rusketh.Milk.Plugin.MilkPlugin;
 
-public class Milk_PlayerMessages extends MilkPlugin {
+public class Milk_PlayerMessages extends MilkPlugin { //All plugin classes must start with 'Milk_' and extend 'MilkPlugin'.
 
 	@Override
 	public String GetName() {
@@ -43,7 +43,7 @@ public class Milk_PlayerMessages extends MilkPlugin {
 			example = "motd",
 			desc = "See the MOTD.",
 			least = 0, most = 0,
-			perms = {""}
+			perms = {""} //As of the moment this does nothing in Milk.
 	)
 	
 	public boolean ShowMOTDCommand(CommandSender sender, String usedCommand, String[] args) {
