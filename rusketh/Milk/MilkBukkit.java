@@ -8,16 +8,19 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import rusketh.Milk.Command.MilkCommandManager;
 import rusketh.Milk.Event.MilkEventManager;
+import rusketh.Milk.Player.MilkPlayerManager;
 import rusketh.Milk.Plugin.MilkPlugin;
 import rusketh.Milk.Plugin.MilkPluginManager;
 
 public class MilkBukkit extends JavaPlugin {
 	
+	private MilkPlayerManager playerManager;
 	private MilkEventManager eventManager;
 	private MilkCommandManager commandManager;
 	private MilkPluginManager pluginManager;
 	
 	public void CreateManagers() {
+		playerManager = new MilkPlayerManager(this);
 		eventManager = new MilkEventManager(this);
 		commandManager = new MilkCommandManager(this);
 		pluginManager = new MilkPluginManager(this, eventManager, commandManager);
@@ -51,6 +54,10 @@ public class MilkBukkit extends JavaPlugin {
 	
 	public void RegisterPlugin(MilkPlugin plugin) {
 		pluginManager.RegisterPlugin(plugin);
+	}
+	
+	public MilkPlayerManager GetPlayerManager() {
+		return playerManager;
 	}
 	
 	/*---------------------------

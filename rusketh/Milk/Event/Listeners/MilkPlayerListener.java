@@ -43,11 +43,13 @@ public class MilkPlayerListener extends PlayerListener {
 	}
 
 	public void onPlayerJoin( PlayerJoinEvent event) {
+		milkBukkit.GetPlayerManager().AddPlayer(event.getPlayer());
 		milkBukkit.CallEvent("PLAYER_JOIN", event);
 	}
 	
 	public void onPlayerQuit( PlayerQuitEvent event) {
 		milkBukkit.CallEvent("PLAYER_QUIT", event);
+		milkBukkit.GetPlayerManager().RemovePlayer(event.getPlayer());
 	}
 	
 	public void onPlayerKick(PlayerKickEvent event) {
