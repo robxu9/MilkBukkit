@@ -121,8 +121,17 @@ public class MilkCommandManager {
 						throw new CommandException("%red%This command can only be used from console.");
 					}
 					
-					//TODO auto perms!
+					if ( command.perms().length > 0 ) {
+						Boolean hasPerm = false;
 					
+						for ( String perm : command.perms() ) {
+							sender.hasPermission(perm);
+						}
+					
+						if ( !hasPerm ) { //TODO config for message!
+							throw new CommandException("%red%I'm sorry Dave but i cant let you do that.");
+						}
+					}
 				} else if ( !command.console() ) {
 					throw new CommandException("This command can not be used from console.");
 				}

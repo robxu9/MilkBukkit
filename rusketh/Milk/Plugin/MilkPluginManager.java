@@ -79,6 +79,10 @@ public class MilkPluginManager {
 		return plugins.get(name.toLowerCase());
 	}
 	
+	public Hashtable<String, MilkPlugin> GetPlugins() {
+		return plugins;
+	}
+	
 	public void EnablePlugins() {
 		for ( MilkPlugin plugin : plugins.values() ) {
 			plugin.SetEnabled(true);

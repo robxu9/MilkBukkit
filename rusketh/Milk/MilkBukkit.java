@@ -8,6 +8,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import rusketh.Milk.Command.MilkCommandManager;
 import rusketh.Milk.Event.MilkEventManager;
+import rusketh.Milk.Player.MilkPlayer;
 import rusketh.Milk.Player.MilkPlayerManager;
 import rusketh.Milk.Plugin.MilkPlugin;
 import rusketh.Milk.Plugin.MilkPluginManager;
@@ -60,6 +61,16 @@ public class MilkBukkit extends JavaPlugin {
 		return playerManager;
 	}
 	
+	public MilkPlayer GetPlayer(Player player) {
+		return playerManager.GetPlayer(player);
+	}
+	
+	//public MilkPermManager GetPermManager() {
+	//	return permManager;
+	//}
+	
+	
+	
 	/*---------------------------
 	 *  Milk Utility Functions
 	 ---------------------------*/
@@ -82,9 +93,15 @@ public class MilkBukkit extends JavaPlugin {
 		message = message.replace("%Grey%", ChatColor.DARK_GRAY.toString());
 		message = message.replace("%white%", ChatColor.WHITE.toString());
 		
-		message = message.replace("%servername%", "" + getServer().getName());
+		//message = message.replace("%servername%", "" + getServer().getName());
 		message = message.replace("%serverip%", "" + getServer().getIp());
 		message = message.replace("%serverport%", "" + getServer().getPort());
+		
+		for ( MilkPlugin plugin : pluginManager.GetPlugins().values() ) {
+			if ( plugin.Enabled() ) {
+				message = plugin.OnFormat(message);
+			}
+		}
 		
 		return message;
 	}
@@ -94,12 +111,24 @@ public class MilkBukkit extends JavaPlugin {
 		message = message.replace("%worldtime%", GameTime(world.getTime()));
 		message = message.replace("%worldname%", world.getName());
 		
+		for ( MilkPlugin plugin : pluginManager.GetPlugins().values() ) {
+			if ( plugin.Enabled() ) {
+				message = plugin.OnFormat(message, world);
+			}
+		}
+		
 		return message;
 	}
 	
 	public String Format(String message,Player player) {
 		message = Format(message,player.getWorld());
 		message = message.replace("%playername%", player.getDisplayName());
+		
+		for ( MilkPlugin plugin : pluginManager.GetPlugins().values() ) {
+			if ( plugin.Enabled() ) {
+				message = plugin.OnFormat(message, player);
+			}
+		}
 		
 		return message;
 	}

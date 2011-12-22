@@ -8,8 +8,10 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import org.bukkit.Server;
+import org.bukkit.World;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
 
 import rusketh.Milk.MilkBukkit;
 
@@ -56,6 +58,18 @@ public abstract class MilkPlugin {
 		}
 	}
 	
+	public String OnFormat(String message) {
+		return message;
+	}
+	
+	public String OnFormat(String message,World world) {
+		return message;
+	}
+	
+	public String OnFormat(String message,Player player) {
+		return message;
+	}
+	
 	protected void Message(String message) {
 		milkBukkit.Message(message);
 	}
@@ -76,7 +90,7 @@ public abstract class MilkPlugin {
 		}
 	}
 	
-	protected final void CreateConig(File configFile) {
+	protected final void CreateConfig(File configFile) {
 		configuration = new YamlConfiguration();
 		configurationFile = configFile;
 		LoadConfig();

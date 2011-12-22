@@ -143,7 +143,7 @@ public class MilkPluginLoader {
 			MilkPlugin plugin = pluginClass.newInstance();
 			
 			pluginManager.RegisterPlugin(plugin);
-			plugin.CreateConig(configFile);
+			plugin.CreateConfig(configFile);
 			
 		} catch (ClassNotFoundException e) {
 			Message("Milk: Error '" + e + "'.");
