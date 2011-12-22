@@ -83,7 +83,12 @@ public class MilkCommandManager {
 		boolean sucess = false;
 		
 		Message("Milk: Debug running Command '" + usedCommand + "' with '" + args.length + "' arugments.");
-		Message("Milk: Debug the first argument was '" + args[0] + "'");
+		int argNum = 1;
+		
+		for ( String arg : args ) {
+			Message("Milk: Debug #" + argNum + " = '" + arg + "'.");
+			argNum++;
+		}
 		
 		try
 		{

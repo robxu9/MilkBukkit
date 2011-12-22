@@ -148,6 +148,7 @@ public class MilkEventManager {
 	            } catch (Throwable e) {
 	            	Message( "Milk Error: '" + e + "'.");
 	            	Message( "When: Calling event '" + eventName + "' on plugin '" + plugin.GetName() + "'");
+	            	e.printStackTrace();
 	    		}
             }
         }

@@ -162,10 +162,11 @@ public class MilkPlayerListener extends PlayerListener {
 	public void onPlayerChat(PlayerChatEvent event) {
 		if ( event.getMessage().startsWith("!") ) {
 			
-			String usedCommand = event.getMessage().toLowerCase().split(" ")[0].substring(1);
-			String[] args = event.getMessage().substring(usedCommand.length() + 1).split(" ");
-					
-			if ( milkBukkit.RunCommand( (CommandSender)event.getPlayer(), usedCommand, args) ) {
+			String line = event.getMessage().toLowerCase().substring(1); //Remember the '!' is still there.
+	    	String cmd = line.split("[\\s]")[0];
+			String[] args = line.substring( cmd.length() ).trim().split("[\\s]+");
+			
+			if ( milkBukkit.RunCommand( (CommandSender)event.getPlayer(), cmd, args) ) {
 				event.setCancelled(true);
 				return;
 			}

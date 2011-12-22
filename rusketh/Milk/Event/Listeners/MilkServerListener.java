@@ -26,7 +26,15 @@ public class MilkServerListener extends ServerListener {
     }
 
     public void onServerCommand(ServerCommandEvent event) {
-    	//TODO: Make this call commands!
+    	
+    	String line = event.getCommand().toLowerCase(); //Remember the '/' is still there.
+    	String cmd = line.split("[\\s]")[0];
+		String[] args = line.substring( cmd.length() ).trim().split("[\\s]+");
+		
+		if ( milkBukkit.RunCommand(event.getSender(), cmd, args ) ) {
+			return;
+		}
+    	
     	milkBukkit.CallEvent("SERVER_COMMAND", event);
     }
     
