@@ -114,17 +114,22 @@ public class MilkCommandManager {
 				
 				if ( sender instanceof Player ) {
 					
+					Player player = (Player)sender;
+					
 					if ( !command.player() ) {
 						throw new CommandException("%red%This command can only be used from console.");
 					}
 					
 					if ( command.perms().length > 0 ) {
-						Boolean hasPerm = false;
+						Boolean hasPerm = player.isOp();
 					
 						for ( String perm : command.perms() ) {
-							sender.hasPermission(perm);
+							if ( player.hasPermission(perm) ) {
+								hasPerm = true;
+								break;
+							}
 						}
-					
+						
 						if ( !hasPerm ) { //TODO config for message!
 							String message = "I'm sorry Dave but i can't let you do that.";
 							message = milkBukkit.GetConfiguration().getString("messages.disallowed_command", message);

@@ -49,12 +49,22 @@ public abstract class MilkPlugin {
 	}
 	
 	protected void SetEnabled(final Boolean value) {
-		if ( value && !isEnabled ) {
-			isEnabled = true;
-			Enable();
-		} else if ( !value && isEnabled ) {
-			isEnabled = false;
-			Disable();
+		try {
+			if ( value && !isEnabled ) {
+				isEnabled = true;
+				Enable();
+			} else if ( !value && isEnabled ) {
+				isEnabled = false;
+				Disable();
+			}
+		} catch (Throwable e) {
+        	Message( "Milk Error: '" + e + "'.");
+        	if ( value ) {
+        		Message( "When: Enabling plugin '" + GetName() + "'.");
+        	} else {
+        		Message( "When: Disabling plugin '" + GetName() + "'.");
+        	}
+        	e.printStackTrace();
 		}
 	}
 	

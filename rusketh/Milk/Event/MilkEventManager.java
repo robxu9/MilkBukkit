@@ -167,7 +167,15 @@ public class MilkEventManager {
             
             if ( plugin.Enabled() ) {
 	            try {
-	            	method.invoke(plugin, event);
+	            	
+	            	Integer totalPerams = method.getParameterTypes().length;
+	            	
+	            	if ( totalPerams == 1 ) {
+	            		method.invoke(plugin, event);
+	            	} else if ( totalPerams == 0 ) {
+	            		method.invoke(plugin);
+	            	}
+	            	
 	            } catch (Throwable e) {
 	            	Message( "Milk Error: '" + e + "'.");
 	            	Message( "When: Calling event '" + eventName + "' on plugin '" + plugin.GetName() + "'");
@@ -175,5 +183,9 @@ public class MilkEventManager {
 	    		}
             }
         }
+	}
+	
+	public void Call(String eventName) {
+		Call(eventName, null);
 	}
 }
