@@ -82,14 +82,6 @@ public class MilkCommandManager {
 	{
 		boolean sucess = false;
 		
-		Message("Milk: Debug running Command '" + usedCommand + "' with '" + args.length + "' arugments.");
-		int argNum = 1;
-		
-		for ( String arg : args ) {
-			Message("Milk: Debug #" + argNum + " = '" + arg + "'.");
-			argNum++;
-		}
-		
 		try
 		{
 			
@@ -134,7 +126,9 @@ public class MilkCommandManager {
 						}
 					
 						if ( !hasPerm ) { //TODO config for message!
-							throw new CommandException("%red%I'm sorry Dave but i cant let you do that.");
+							String message = "I'm sorry Dave but i can't let you do that.";
+							message = milkBukkit.GetConfiguration().getString("messages.disallowed_command", message);
+							throw new CommandException("%red%" + message);
 						}
 					}
 				} else if ( !command.console() ) {

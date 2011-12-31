@@ -43,6 +43,7 @@ public class MilkEventManager {
 		
 		CreateListeners();
 		RegisterEvents();
+		RegisterTickEvents();
 	}
 	
 	private void Message(String message) {
@@ -88,6 +89,28 @@ public class MilkEventManager {
 				Message("Registering event '" + event + "' in catagory '" + event.getCategory() + "'");
 			}
 		}
+	}
+	
+	private void RegisterTickEvents() {
+		milkBukkit.getServer().getScheduler().scheduleAsyncRepeatingTask(milkBukkit, new Runnable() {
+		    public void run() {
+		        Call("MILK_TICK",null);
+		    }
+		}, 1L, 1L);
+		
+		milkBukkit.getServer().getScheduler().scheduleAsyncRepeatingTask(milkBukkit, new Runnable() {
+		    public void run() {
+		        Call("MILK_SECOND",null);
+		        //Message("One Second Has Past");
+		    }
+		}, 20L, 20L);
+		
+		milkBukkit.getServer().getScheduler().scheduleAsyncRepeatingTask(milkBukkit, new Runnable() {
+		    public void run() {
+		        Call("MILK_MINUTE",null);
+		        //Message("One Minute Has Past");
+		    }
+		}, 1200L, 1200L);
 	}
 	
 	private void RegisterEvent(MilkPlugin plugin, String eventName, Method method) {

@@ -1,8 +1,14 @@
 package rusketh.Milk;
 
+import java.io.File;
+import java.io.IOException;
+
 import org.bukkit.ChatColor;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.InvalidConfigurationException;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -20,19 +26,42 @@ public class MilkBukkit extends JavaPlugin {
 	private MilkCommandManager commandManager;
 	private MilkPluginManager pluginManager;
 	
-	public void CreateManagers() {
+	private YamlConfiguration configuration;
+	private File configurationFile;
+	
+	private void CreateManagers() {
 		playerManager = new MilkPlayerManager(this);
 		eventManager = new MilkEventManager(this);
 		commandManager = new MilkCommandManager(this);
 		pluginManager = new MilkPluginManager(this, eventManager, commandManager);
+		
+	}
+	
+	private void createConfiguration() {
+		try {
+			configurationFile = new File("Milk/Config.yml");
+			
+			if ( !configurationFile.exists() ) {
+				configurationFile.createNewFile();
+			}
+			
+			configuration = new YamlConfiguration();
+			configuration.load(configurationFile);
+		} catch (IOException e) {
+			//TODO this!
+		} catch (InvalidConfigurationException e) {
+			//TODO this!
+		}
 	}
 	
 	public void Message(String message) {
-		System.out.print(message);
+		//System.out.print(message);
+		getServer().getConsoleSender().sendMessage(message);
 	}
 	
 	public void onEnable() {
 		CreateManagers();
+		createConfiguration();
 		pluginManager.EnablePlugins();
 		CallEvent("MILK_INIT", null);
 	}
@@ -65,9 +94,9 @@ public class MilkBukkit extends JavaPlugin {
 		return playerManager.GetPlayer(player);
 	}
 	
-	//public MilkPermManager GetPermManager() {
-	//	return permManager;
-	//}
+	public FileConfiguration GetConfiguration() {
+		return configuration;
+	}
 	
 	
 	
@@ -93,7 +122,7 @@ public class MilkBukkit extends JavaPlugin {
 		message = message.replace("%Grey%", ChatColor.DARK_GRAY.toString());
 		message = message.replace("%white%", ChatColor.WHITE.toString());
 		
-		//message = message.replace("%servername%", "" + getServer().getName());
+		message = message.replace("%servername%", configuration.getString("server.name", "MilkBukkit Server"));
 		message = message.replace("%serverip%", "" + getServer().getIp());
 		message = message.replace("%serverport%", "" + getServer().getPort());
 		
